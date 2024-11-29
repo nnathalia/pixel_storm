@@ -31,4 +31,16 @@ export class AppController {
   about() {
     return { title: 'Sobre Nós' };
   }
+
+  @Get('/login')
+  @Render('auth/login')
+  login() {
+    return { title: 'Login' };
+  }
+
+  @Get('/cadastro')
+  @Render('auth/cadastro')
+  cadastro() {
+    return { title: 'Cadastro' };
+  }
 }

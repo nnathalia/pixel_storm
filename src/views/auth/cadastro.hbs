@@ -1,0 +1,59 @@
+{{#> auth }}
+  {{#*inline "content"}}
+    <div class="pt-0 p-3 pb-0">
+      <form>
+        <div class="row mb-4">
+          <div class="col">
+            <div data-mdb-input-init class="form-outline">
+              <input type="text" id="firstName" class="form-control" />
+              <label class="form-label" for="firstName">First name</label>
+            </div>
+          </div>
+          <div class="col">
+            <div data-mdb-input-init class="form-outline">
+              <input type="text" id="lastName" class="form-control" />
+              <label class="form-label" for="lastName" >Last name</label>
+            </div>
+          </div>
+        </div>
+        <!-- Username input -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="text" id="username" class="form-control" />
+          <label class="form-label" for="username">Username</label>
+        </div>
+        <!-- Email input -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <input type="email" id="email" class="form-control" />
+          <label class="form-label" for="email">Email address</label>
+        </div>
+        <!-- Password input -->
+        <div class="row mb-4">
+          <div class="col">
+            <div data-mdb-input-init class="form-outline">
+              <input type="password" id="password" class="form-control" />
+          <label class="form-label" for="password">Password</label>
+            </div>
+          </div>
+          <div class="col">
+            <div data-mdb-input-init class="form-outline">
+              <input type="passwordConfirm" id="passwordConfirm" class="form-control" />
+          <label class="form-label" for="passwordConfirm">Confirm Password</label>
+            </div>
+          </div>
+        </div>
+        <!-- Checkbox -->
+        <div class="form-check d-flex justify-content-center mb-4">
+          <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
+          <label class="form-check-label" for="form2Example33">
+            Concordo com os termos
+          </label>
+        </div>
+        <!-- Submit button -->
+        <div class="container-fluid d-flex flex-column justify-content-center">
+          <button data-mdb-ripple-init type="button" class="btn btn-primary btn-block mb-4 text-white">Cadastrar</button>
+        </div>
+      </form>
+      <p class="d-flex justify-content-center"><a href='login' class="link-underline-dark">Já tem conta? Faça login!</a></p>
+    </div>
+  {{/inline}}
+{{/auth}}
