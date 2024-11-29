@@ -43,4 +43,16 @@ export class AppController {
   cadastro() {
     return { title: 'Cadastro' };
   }
+
+  @Get('/create')
+  @Render('produto/create')
+  create() {
+    return { title: 'Cadastro de produtos' };
+  }
+
+  @Get('/lista')
+  @Render('produto/lista')
+  lista() {
+    return { title: 'Lista de produtos' };
+  }
 }
