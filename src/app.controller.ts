@@ -70,22 +70,4 @@ export class AppController {
         'Crie uma nova conta na Pixel Storm e aproveite todas as vantagens de ser nosso cliente.',
     };
   }
-
-  @Get('/create')
-  @Render('produto/create')
-  create() {
-    return {
-      title: 'Cadastro de produtos',
-      description: 'Formulário para cadastro de novos produtos.',
-    };
-  }
-
-  @Get('/lista')
-  @Render('produto/lista')
-  lista() {
-    return {
-      title: 'Lista de produtos',
-      description: 'Lista de produtos cadastrados.',
-    };
-  }
 }
