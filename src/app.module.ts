@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { ProdutosModule } from './modules/produtos/produtos.module';
 
 
+
 @Module({
   imports: [AuthModule, UsersModule, ProdutosModule],
   controllers: [AppController],
