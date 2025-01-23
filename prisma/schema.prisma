@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Jogo {
+  id            Int        @id @default(autoincrement())
+  nome          String     @db.VarChar(200)
+  descricao     String     @db.VarChar(500)
+  preco         Float       @db.Float()
+  data_lanc     DateTime   @db.Date()
+  img_url       String?    @db.VarChar(500)
+  
+  // Relacionamento com o modelo Plataforma
+  plataforma    Plataforma @relation(fields: [plataformaId], references: [id])
+  plataformaId  Int        @db.Int
+
+  // Relacionamento com o modelo Desenvolvedor
+  desenvolvedor    Desenvolvedor @relation(fields: [desenvolvedorId], references: [id])
+  desenvolvedorId  Int        @db.Int
+
+  // Relacionamento com o modelo Genero
+  genero    Genero @relation(fields: [generoId], references: [id])
+  generoId  Int        @db.Int
+
+  @@map("jogos")
+}
+
+model Plataforma {
+  id    Int    @id @default(autoincrement())
+  nome  String @db.VarChar(200)
+
+  // Relacionamento inverso
+  jogos Jogo[]
+
+  @@map("plataformas")
+}
+
+model Desenvolvedor {
+  id    Int    @id @default(autoincrement())
+  nome  String @db.VarChar(200)
+
+  // Relacionamento inverso
+  jogos Jogo[]
+
+  @@map("desenvolvedores")
+}
+
+model Genero {
+  id    Int    @id @default(autoincrement())
+  nome  String @db.VarChar(200)
+
+  // Relacionamento inverso
+  jogos Jogo[]
+
+  @@map("generos")
+}
+

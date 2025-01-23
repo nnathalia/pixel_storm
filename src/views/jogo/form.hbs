@@ -1,0 +1,134 @@
+{{#> main}}
+  {{#*inline "content"}}
+    <div class="pt-0 p-3 pb-0">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h2 class="m-3">{{#if jogo}}Editar Jogo{{else}}Cadastrar um novo Jogo{{/if}}</h2>
+          </div>
+          <div class="col">
+            <div class="d-flex justify-content-end align-items-center pt-3">
+              <a href='/jogo'>
+                <button data-mdb-ripple-init type="button" class="btn btn-primary text-white">Lista de jogos</button>
+              </a>
+            </div>
+          </div>
+        </div>
+        <form 
+          id="jogoForm" 
+          action="{{#if jogo}}/jogo/{{jogo.id}}?_method=PUT{{else}}/jogo{{/if}}" 
+          method="POST">
+          
+          <div class="row mb-4">
+            <div class="col">
+              <div data-mdb-input-init class="form-outline">
+                <label class="form-label" for="imagem">Imagem</label>
+                <input 
+                  type="text" 
+                  name="img_url" 
+                  id="imagem" 
+                  class="form-control" 
+                  value="{{#if jogo}}{{jogo.img_url}}{{/if}}" />
+              </div>
+            </div>
+            <div class="col">
+              <div data-mdb-input-init class="form-outline">
+                <label class="form-label" for="titulo">Título</label>
+                <input 
+                  type="text" 
+                  name="nome" 
+                  id="titulo" 
+                  class="form-control" 
+                  value="{{#if jogo}}{{jogo.nome}}{{/if}}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-8">
+              <div data-mdb-input-init class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea 
+                  class="form-control" 
+                  name="descricao" 
+                  id="descricao" 
+                  rows="3">{{#if jogo}}{{jogo.descricao}}{{/if}}</textarea>
+              </div>
+            </div>
+            <div class="col">
+              <div data-mdb-input-init class="form-outline">
+                <label class="form-label" for="preco">Preço</label>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  name="preco" 
+                  id="preco" 
+                  class="form-control" 
+                  value="{{#if jogo}}{{jogo.preco}}{{/if}}" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col">
+              <label class="form-label" for="lancamento">Lançamento</label>
+              <input 
+                type="date" 
+                name="data_lanc" 
+                id="lancamento" 
+                class="form-control" 
+                value="{{#if jogo}}{{jogo.lanc}}{{/if}}" />
+            </div>
+            <div class="col">
+              <label class="form-label" for="desenvolvedor">Desenvolvedor</label>
+              <select name="desenvolvedorId" id="desenvolvedor" class="form-select">
+                <option disabled {{#unless jogo}}selected{{/unless}}>Escolha o desenvolvedor</option>
+                {{#each desenvolvedores}}
+                  <option 
+                    value="{{this.id}}" 
+                    {{#if jogo}}{{#if (eq this.id ../jogo.desenvolvedorId)}}selected{{/if}}{{/if}}>
+                    {{this.nome}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label" for="genero">Gênero</label>
+              <select name="generoId" id="genero" class="form-select">
+                <option disabled {{#unless jogo}}selected{{/unless}}>Escolha o gênero</option>
+                {{#each generos}}
+                  <option 
+                    value="{{this.id}}" 
+                    {{#if jogo}}{{#if (eq this.id ../jogo.generoId)}}selected{{/if}}{{/if}}>
+                    {{this.nome}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="col">
+              <label class="form-label" for="plataforma">Plataforma</label>
+              <select name="plataformaId" id="plataforma" class="form-select">
+                <option disabled {{#unless jogo}}selected{{/unless}}>Escolha a plataforma</option>
+                {{#each plataformas}}
+                  <option 
+                    value="{{this.id}}" 
+                    {{#if jogo}}{{#if (eq this.id ../jogo.plataformaId)}}selected{{/if}}{{/if}}>
+                    {{this.nome}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+
+          <!-- Submit button -->
+          <div class="container-fluid d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-block mb-4 text-white">
+              {{#if jogo}}Salvar Alterações{{else}}Cadastrar{{/if}}
+            </button>
+          </div>
+        </form>
+
+      </div> 
+    </div>
+  {{/inline}}
+{{/main}}
