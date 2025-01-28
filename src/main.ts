@@ -12,12 +12,13 @@ import { NotFoundExceptionFilter } from './common/filters/not-found-exception.fi
 import { flashErrors } from './common/helpers/flash-errors';
 import { hbsRegisterHelpers } from './common/helpers/hbs-functions';
 import flash = require('connect-flash');
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Middleware para sobrescrever métodos HTTP
-  app.use(methodOverride('_method')); // Coloque este antes de rotas
+  app.use(methodOverride('_method'));
 
   // Configurações do Handlebars e paths
   hbsRegisterHelpers(hbs);
@@ -27,13 +28,19 @@ async function bootstrap() {
   hbs.registerPartials(join(__dirname, '/views/layouts/partials'));
   app.setViewEngine('hbs');
 
+  hbs.registerHelper('multiply', (a, b) => {
+    return (a * b).toFixed(2);
+  });
+
   // Configurações de sessão e Passport
+  app.use(cookieParser()); // Necessário para cookies
   app.use(
     session({
       secret: 'nest cats',
       resave: false,
-      saveUninitialized: false,
-    }),
+      saveUninitialized: true,
+      cookie: { secure: false },
+    })
   );
   app.use(passport.initialize());
   app.use(passport.session());

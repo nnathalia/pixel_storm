@@ -1,51 +1,59 @@
 {{#> main}}
   {{#*inline "content"}}
-    <div class="mt-5 mb-5 p-5">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="d-flex justify-content-between">
-      <div>
-        <tbody>
+    <div class="container mt-5 mb-5">
+      <h1 class="mb-4">Carrinho de Compras</h1>
+      {{#if items.length}}
+      <table class="table">
+        <thead>
           <tr>
-            <th>Valor Total:</th>
-            <th>1000</th>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço Unitário</th>
+            <th>Total</th>
+            <th>Ações</th>
           </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>
+              <form action="/cart/update/{{this.id}}" method="POST" class="d-inline">
+                <input
+                  type="number"
+                  name="quantity"
+                  value="{{this.quantity}}"
+                  min="1"
+                  class="form-control d-inline-block"
+                  style="max-width: 4rem;">
+                <button type="submit" class="btn btn-link">Atualizar</button>
+              </form>
+            </td>
+            <td>R$ {{this.price}}</td>
+            <td>R$ {{this.total}}</td>
+            <td>
+              <form action="/cart/remove/{{this.id}}" method="POST" class="d-inline">
+                <button
+  class="remove-from-cart btn btn-danger btn-sm"
+  data-id="1"
+>
+  Remover 
+</button>
+              </form>
+            </td>
+          </tr>
+          {{/each}}
         </tbody>
-      </div>
-      <div>
-        <button class="btn btn-outline-dark flex-shrink-0" type="button">
-          <i class="bi-cart-fill me-1"></i>
-          Finalizar compra
+      </table>
+      <div class="d-flex justify-content-between align-items-center">
+        <h4>Total: R$ {{total}}</h4>
+        <button class="btn btn-outline-dark" type="button">
+          <i class="bi-cart-fill me-1"></i> Finalizar Compra
         </button>
       </div>
-      </div>
-      </div>
+      {{else}}
+      <p class="text-center">Seu carrinho está vazio.</p>
+      {{/if}}
+    </div>
   {{/inline}}
 {{/main}}

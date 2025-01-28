@@ -6,6 +6,7 @@ import { JogoController } from './jogo.controller';
 
 @Module({
   providers: [JogoService, PrismaService],
-  controllers: [JogoController]
+  controllers: [JogoController],
+  exports: [JogoService]
 })
 export class JogoModule {}

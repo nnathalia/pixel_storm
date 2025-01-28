@@ -5,9 +5,11 @@ import { UsersModule } from './modules/users/users.module';
 import { AppController } from './app.controller';
 import { JogoModule } from './modules/jogo/jogo.module';
 import { MethodOverrideMiddleware } from './common/method-override.middleware';
+import { CartModule } from './modules/cart/cart.module';
+
 
 @Module({
-  imports: [AuthModule, UsersModule, JogoModule],
+  imports: [AuthModule, UsersModule, JogoModule, CartModule],
   controllers: [AppController],
 })
 export class AppModule implements NestModule {

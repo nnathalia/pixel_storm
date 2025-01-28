@@ -1,8 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Render } from '@nestjs/common';
+import {Controller, Get, NotFoundException,Query, Render} from '@nestjs/common';
+import { JogoService } from './modules/jogo/jogo.service';
+
 
 @Controller()
 export class AppController {
+   constructor(private readonly jogoService: JogoService){}
+    
   @Get('/')
   @Render('home')
   home() {
@@ -15,31 +19,43 @@ export class AppController {
 
   @Get('/shop')
   @Render('shop')
-  shop() {
+  async shop() {
+    const jogos = await this.jogoService.listarJogos();
+    const games = jogos.map((jogo) => ({
+      id: jogo.id,
+      img_url: jogo.img_url,
+      nome: jogo.nome,
+      preco: jogo.preco.toFixed(2),
+    }))
     return {
       title: 'Shop',
       description:
         'Nossa loja virtual completa. Navegue por nossa coleção de jogos digitais e encontre seus favoritos.',
+      jogos: games,
     };
   }
 
   @Get('/shop_item')
   @Render('shop_item')
-  shop_item() {
+  async shop_item(@Query('id') id: string) {
+    const jogo = await this.jogoService.findById(Number(id));
+    if(!jogo){
+      throw new NotFoundException('Jogo não encontrado')
+    }
     return {
-      title: 'Produto',
-      description:
-        'Detalhes do produto selecionado. Veja informações, capturas de tela e avaliações antes de comprar.',
-    };
-  }
-
-  @Get('/cart')
-  @Render('cart')
-  cart() {
-    return {
-      title: 'Carrinho',
-      description:
-        'Revise os itens adicionados ao seu carrinho. Pronto para finalizar a compra?',
+      title: jogo.nome,
+      description: `Detalhes sobre o jogo ${jogo.nome}`,
+      jogo:{
+        id: jogo.id,
+        nome: jogo.nome,
+        descricao: jogo.descricao,
+        img_url: jogo.img_url,
+        preco: jogo.preco.toFixed(2),
+        desenvolvedor: jogo.desenvolvedor.nome,
+        genero: jogo.genero.nome,
+        plataforma: jogo.plataforma.nome,
+        data_lanc: jogo.data_lanc.toISOString().split('T')[0],
+      }
     };
   }
 
