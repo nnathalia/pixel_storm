@@ -58,13 +58,19 @@ addToCart(
   @Get()
 @Render('cart')
 viewCart(@Session() session: any) {
-  const items = session.cart || [];
-  const total = items.reduce(
-    (sum, item) => sum + (item.price * item.quantity), // Multiplicação corrigida
-    0
-  );
+  // Calcula o total para cada item
+  const items = (session.cart || []).map(item => ({
+    ...item,
+    total: (item.price * item.quantity).toFixed(2) // Calcula e formata o total do item
+  }));
 
-  return { items, total: total.toFixed(2), title: 'Carrinho' };
+  // Calcula o total geral do carrinho
+  const total = items.reduce(
+    (sum, item) => sum + (item.price * item.quantity),
+    0
+  ).toFixed(2);
+
+  return { items, total, title: 'Carrinho' };
 }
 
 }
