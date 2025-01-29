@@ -42,6 +42,20 @@ async function bootstrap() {
       cookie: { secure: false },
     })
   );
+
+  app.useGlobalFilters({
+    catch(exception, host) {
+      const ctx = host.switchToHttp();
+      const res = ctx.getResponse();
+      
+      if (exception.getStatus && exception.getStatus() === 401) {
+        return res.redirect('/login');
+      }
+  
+      res.status(500).send('Erro no servidor');
+    },
+  });
+  
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(flash());

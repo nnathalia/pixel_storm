@@ -1,50 +1,38 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Render,
-  Request,
-  Res,
-  UseFilters,
-  UseGuards,
-} from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Controller, Post, Body, Redirect, Res, Req, UseGuards, Get } from '@nestjs/common';
+import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { AuthExceptionFilter } from 'src/common/filters/auth-exceptions.filter';
-import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
-import { LoginGuard } from 'src/common/guards/login.guard';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
+
 
 @Controller('auth')
-@UseFilters(AuthExceptionFilter)
 export class AuthController {
-  @Get('/login')
-  @Render('auth/login')
-  index(@Request() req): { message: string } {
-    return { message: req.flash('loginError') };
+  constructor(private authService: AuthService) {}
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@Req() req) {
+    const user = req.user;
+    return { id: user.id, nome: user.nome, email: user.email }; // Retorna o nome além do email
   }
 
-  @UseGuards(LoginGuard)
-  @Post('/login')
-  login(@Res() res: Response) {
-    res.redirect('/home');
+  @Post('register')
+  @Redirect('/login')
+  async register(@Body() body: { nome: string; email: string; senha: string }) {
+    return this.authService.register(body.nome, body.email, body.senha);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @Get('/home')
-  @Render('home')
-  getHome(@Request() req) {
-    return { user: req.user };
+  @Post('login')
+  @Redirect('/')
+  async login(@Body() body: { email: string; senha: string }, @Res() res: Response) {
+    await this.authService.login(body.email, body.senha, res);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @Get('/profile')
-  @Render('auth/profile')
-  getProfile(@Request() req) {
-    return { user: req.user };
-  }
 
-  @Get('/logout')
-  logout(@Request() req, @Res() res: Response) {
-    req.session.destroy();
-    res.redirect('/');
+
+  @Post('logout')
+  logout(@Res() res: Response) {
+    res.clearCookie('jwt'); 
+    res.redirect('/login'); 
   }
 }

@@ -20,7 +20,7 @@ export class CartService {
       },
     });
 
-    const existingItem = this.cart.find(item => item.id === product.id);
+    const existingItem = this.cart.find((item) => item.id === product.id);
     if (existingItem) {
       existingItem.quantity += product.quantity;
       existingItem.total = existingItem.quantity * existingItem.price;
@@ -42,7 +42,7 @@ export class CartService {
 
   // Atualizar quantidade de um item
   updateItemQuantity(id: number, quantity: number) {
-    const item = this.cart.find(item => item.id === id);
+    const item = this.cart.find((item) => item.id === id);
     if (item) {
       item.quantity = quantity;
       item.total = item.quantity * item.price;
@@ -52,7 +52,7 @@ export class CartService {
 
   // Remover item do carrinho
   removeItem(id: number) {
-    this.cart = this.cart.filter(item => item.id !== id);
+    this.cart = this.cart.filter((item) => item.id !== id);
     return this.cart;
   }
 
@@ -61,4 +61,3 @@ export class CartService {
     return this.cart.reduce((total, item) => total + item.total, 0);
   }
 }
-

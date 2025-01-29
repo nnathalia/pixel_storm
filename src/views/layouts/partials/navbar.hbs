@@ -11,19 +11,33 @@
     aria-expanded='false'
     aria-label='Toggle navigation'
   ><span class='navbar-toggler-icon'></span></button>
+
   <div class='collapse navbar-collapse' id='navbarSupportedContent'>
     <ul class='navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4'>
       <li class='nav-item'><a class='nav-link' href='/'>Home</a></li>
-      <li class='nav-item'><a class='nav-link' href='about'>About</a></li>
-      <li class='nav-item'><a class='nav-link' href='shop'>Shop</a></li>
+      <li class='nav-item'><a class='nav-link' href='/about'>About</a></li>
+      <li class='nav-item'><a class='nav-link' href='/shop'>Shop</a></li>
     </ul>
 
-    <form class='d-flex' onsubmit="window.location.href='cart'; return false;">
+    <form class='d-flex me-3' action="/cart" method="GET">
       <button class='btn btn-outline-dark' type='submit'>
         <i class='bi-cart-fill me-1'></i>
         Carrinho
       </button>
     </form>
+
+    <!-- Exibir usuário logado e botão de logout -->
+    {{#if user}}
+  <div class="d-flex align-items-center">
+    <span class="me-3">Olá, {{user.nome}}</span>
+    <form action="/auth/logout" method="POST">
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+  </div>
+{{else}}
+  <a href="/login" class="btn btn-primary">Login</a>
+{{/if}}
+
+
   </div>
 </div>
-

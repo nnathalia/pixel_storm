@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import {Controller, Get, NotFoundException,Query, Render} from '@nestjs/common';
+import {Controller, Get, NotFoundException,Query, Render, Req} from '@nestjs/common';
 import { JogoService } from './modules/jogo/jogo.service';
 
 
@@ -9,17 +9,18 @@ export class AppController {
     
   @Get('/')
   @Render('home')
-  home() {
+  home(@Req() req) {
     return {
       title: 'Home',
       description:
         'Explore nossas ofertas e lançamentos de jogos para PC e videogames.',
+      user: req.user
     };
   }
 
   @Get('/shop')
   @Render('shop')
-  async shop() {
+  async shop(@Req() req) {
     const jogos = await this.jogoService.listarJogos();
     const games = jogos.map((jogo) => ({
       id: jogo.id,
@@ -32,12 +33,13 @@ export class AppController {
       description:
         'Nossa loja virtual completa. Navegue por nossa coleção de jogos digitais e encontre seus favoritos.',
       jogos: games,
+      user: req.user
     };
   }
 
   @Get('/shop_item')
   @Render('shop_item')
-  async shop_item(@Query('id') id: string) {
+  async shop_item(@Query('id') id: string, @Req() req) {
     const jogo = await this.jogoService.findById(Number(id));
     if(!jogo){
       throw new NotFoundException('Jogo não encontrado')
@@ -55,17 +57,19 @@ export class AppController {
         genero: jogo.genero.nome,
         plataforma: jogo.plataforma.nome,
         data_lanc: jogo.data_lanc.toISOString().split('T')[0],
-      }
+      },
+      user: req.user
     };
   }
 
   @Get('/about')
   @Render('about')
-  about() {
+  about(@Req() req) {
     return {
       title: 'Sobre Nós',
       description:
         'Conheça mais sobre a Pixel Storm. Nossa missão, visão e a equipe por trás da loja.',
+      user: req.user
     };
   }
 

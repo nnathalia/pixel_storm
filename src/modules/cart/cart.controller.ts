@@ -1,39 +1,31 @@
 /* eslint-disable prettier/prettier */
 import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Param,
-  Session,
-  Redirect,
-  Render,
-} from '@nestjs/common';
+  Controller, Post, Get, Body, Param, Session, Redirect, Render, Req} from '@nestjs/common';
 
 
 @Controller('cart')
 export class CartController {
   @Post('add')
-@Redirect('/cart')
-addToCart(
-  @Body('id') id: string,
-  @Body('name') name: string,
-  @Body('price') price: number,
-  @Body('quantity') quantity: number,
-  @Session() session: any,
-) {
-  if (!session.cart) {
-    session.cart = [];
-  }
+  @Redirect('/cart')
+  addToCart(
+    @Body('id') id: string,
+    @Body('name') name: string,
+    @Body('price') price: number,
+    @Body('quantity') quantity: number,
+    @Session() session: any,
+  ) {
+    if (!session.cart) {
+      session.cart = [];
+    }
 
-  const existingItem = session.cart.find((item) => item.id === id);
+    const existingItem = session.cart.find((item) => item.id === id);
 
-  if (existingItem) {
-    existingItem.quantity += quantity; // Atualiza a quantidade se o item já existir
-  } else {
-    session.cart.push({ id, name, price, quantity }); // Adiciona um novo item ao carrinho
+    if (existingItem) {
+      existingItem.quantity += quantity; // Atualiza a quantidade se o item já existir
+    } else {
+      session.cart.push({ id, name, price, quantity }); // Adiciona um novo item ao carrinho
+    }
   }
-}
 
   @Post('update/:id')
   @Redirect('/cart')
@@ -56,23 +48,19 @@ addToCart(
   }
 
   @Get()
-@Render('cart')
-viewCart(@Session() session: any) {
-  // Calcula o total para cada item
-  const items = (session.cart || []).map(item => ({
-    ...item,
-    total: (item.price * item.quantity).toFixed(2) // Calcula e formata o total do item
-  }));
+  @Render('cart')
+  viewCart(@Session() session: any, @Req() req) {
+    // Calcula o total para cada item
+    const items = (session.cart || []).map((item) => ({
+      ...item,
+      total: (item.price * item.quantity).toFixed(2), // Calcula e formata o total do item
+    }));
 
-  // Calcula o total geral do carrinho
-  const total = items.reduce(
-    (sum, item) => sum + (item.price * item.quantity),
-    0
-  ).toFixed(2);
+    // Calcula o total geral do carrinho
+    const total = items
+      .reduce((sum, item) => sum + item.price * item.quantity, 0)
+      .toFixed(2);
 
-  return { items, total, title: 'Carrinho' };
+    return { items, total, title: 'Carrinho', user: req.user };
+  }
 }
-
-}
-
-

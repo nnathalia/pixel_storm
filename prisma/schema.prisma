@@ -34,6 +34,7 @@ model Jogo {
   generoId  Int        @db.Int
 
   @@map("jogos")
+  ItemPedido ItemPedido[]
 }
 
 model Plataforma {
@@ -64,5 +65,56 @@ model Genero {
   jogos Jogo[]
 
   @@map("generos")
+}
+
+
+model Usuario {
+  id          Int      @id @default(autoincrement())
+  nome        String   @db.VarChar(500)
+  email       String   @unique @db.VarChar(500)
+  senha       String   @db.VarChar(255)
+  dataCriacao DateTime @default(now())
+
+  pedidos     Pedido[]
+
+  @@map("usuarios")
+}
+
+model Pedido {
+  id          Int       @id @default(autoincrement())
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId   Int
+  dataPedido  DateTime  @default(now())
+  status      String    @db.VarChar(50)
+  total       Float     @db.Float()
+
+  pagamentos  Pagamento[]
+  itens       ItemPedido[]
+
+  @@map("pedidos")
+}
+
+model Pagamento {
+  id             Int      @id @default(autoincrement())
+  pedido         Pedido   @relation(fields: [pedidoId], references: [id])
+  pedidoId       Int
+  metodoPagamento String   @db.VarChar(100)
+  valor          Float    @db.Float()
+  dataPagamento  DateTime @default(now())
+  status         String   @db.VarChar(50)
+
+  @@map("pagamentos")
+}
+
+model ItemPedido {
+  id         Int     @id @default(autoincrement())
+  pedido     Pedido  @relation(fields: [pedidoId], references: [id])
+  pedidoId   Int
+  jogo       Jogo    @relation(fields: [jogoId], references: [id])
+  jogoId     Int
+  quantidade Int
+  preco      Float   @db.Float()
+
+  @@map("itens_pedido")
 }
 
