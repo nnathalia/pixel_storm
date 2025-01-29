@@ -15,7 +15,7 @@ export class JogoController {
     const generos = await this.jogoService.getGeneros();
     const plataformas = await this.jogoService.getPlataformas();
 
-    return { desenvolvedores, generos, plataformas };
+    return { desenvolvedores, generos, plataformas, title: 'Cadastrar jogo'  };
   }
 
   // Formulário de edição de jogo
@@ -31,7 +31,7 @@ export class JogoController {
       return { error: 'Jogo não encontrado', desenvolvedores, generos, plataformas };
     }
 
-    return { jogo, desenvolvedores, generos, plataformas }; // Envia os dados para a view
+    return { jogo, desenvolvedores, generos, plataformas, title: 'Editar jogo' }; // Envia os dados para a view
   }
 
   // Lista os jogos cadastrados
@@ -50,7 +50,7 @@ export class JogoController {
       plataforma: jogo.plataforma.nome,
       lanc: jogo.data_lanc.toISOString().split('T')[0],
     }));
-    return { jogos: games };
+    return { jogos: games, title: 'Lista de jogos'  };
   }
 
   // Cadastro de jogo
