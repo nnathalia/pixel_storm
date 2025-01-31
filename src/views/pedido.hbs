@@ -1,0 +1,52 @@
+{{#> main}}
+  {{#*inline "content"}}
+    {{#if items.length}}
+    <div class="container mt-5 mb-5">
+      <h1 class="mb-4">Finalizar Compra</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço Unitário</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.quantity}}</td>
+            <td>R$ {{this.price}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class="d-flex flex-column justify-content-end">
+        <h4 class="mt-4">Total: R$ {{total}}</h4>
+
+        <form action="/pedido/finalizar" method="POST" class="mt-4">
+          <div class="mb-3">
+            <label for="paymentMethod" class="form-label">Forma de Pagamento</label>
+            <select name="paymentMethod" id="paymentMethod" class="form-select" required>
+              <option value="" disabled selected>Selecione...</option>
+              <option value="cartao_credito">Cartão de Crédito</option>
+              <option value="boleto">Boleto Bancário</option>
+              <option value="pix">Pix</option>
+            </select>
+          </div>
+          <input type="hidden" name="total" value="{{total}}">
+          <button type="submit" class="btn btn-primary">Finalizar Compra</button>
+        </form>
+      </div>
+      
+    </div>
+    {{/if}}
+  {{/inline}}
+{{/main}}
+
+<script>
+  function confirmarCompra() {
+    return confirm('Tem certeza que deseja finalizar a compra?');
+  }
+</script>

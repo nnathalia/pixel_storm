@@ -1,0 +1,18 @@
+.banner-1{
+  background-image: url(../img/mario.png);
+  background-size: contain; /* Mostra a imagem completa */
+  background-repeat: no-repeat; /* Evita repetição da imagem */
+  background-position: center; /* Centraliza a imagem */
+}
+
+.banner-2{
+  background-image: url(../img/streetFighter.png);
+  background-size: contain; /* Mostra a imagem completa */
+  background-repeat: no-repeat; /* Evita repetição da imagem */
+  background-position: center; /* Centraliza a imagem */
+}
+
+section{
+  width: 100%;
+  margin: 0;
+}

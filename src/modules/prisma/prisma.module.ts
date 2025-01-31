@@ -1,9 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 
+@Global()
 @Module({
   providers: [PrismaService],
-  exports: [PrismaService], // Exporte o serviço para ser usado em outros módulos
+  exports: [PrismaService],
 })
 export class PrismaModule {}
+
+export { PrismaService };

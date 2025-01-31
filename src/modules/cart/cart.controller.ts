@@ -1,10 +1,15 @@
 /* eslint-disable prettier/prettier */
 import {
-  Controller, Post, Get, Body, Param, Session, Redirect, Render, Req} from '@nestjs/common';
+  Controller, Post, Get, Body, Param, Session, Redirect, Render, Req,
+  UseGuards} from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
+
 
 
 @Controller('cart')
 export class CartController {
+
+  @UseGuards(JwtAuthGuard)
   @Post('add')
   @Redirect('/cart')
   addToCart(

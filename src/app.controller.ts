@@ -11,7 +11,7 @@ export class AppController {
   @Render('home')
   home(@Req() req) {
     return {
-      title: 'Home',
+      title: 'Bem vindo a Pixel Storm',
       description:
         'Explore nossas ofertas e lançamentos de jogos para PC e videogames.',
       user: req.user

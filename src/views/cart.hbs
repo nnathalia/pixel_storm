@@ -47,9 +47,13 @@
       </table>
       <div class="d-flex justify-content-between align-items-center">
         <h4>Total: R$ {{total}}</h4>
-        <button class="btn btn-outline-dark" type="button">
-          <i class="bi-cart-fill me-1"></i> Finalizar Compra
-        </button>
+        <form action="/pedido/order" method="GET" class="d-inline">
+          <button type="submit" class="btn btn-outline-dark">
+            <i class="bi-cart-fill me-1"></i> Fechar Pedido
+          </button>
+        </form>
+
+
       </div>
       {{else}}
       <p class="text-center">Seu carrinho está vazio.</p>
@@ -57,3 +61,4 @@
     </div>
   {{/inline}}
 {{/main}}
+
