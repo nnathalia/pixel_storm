@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 import { JwtAuthGuard } from '../auth/jwt/jwt-auth.guard';
-import { title } from 'process';
 
 @Controller('pedido')
 export class PedidoController {
