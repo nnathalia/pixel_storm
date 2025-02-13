@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { JogoDto } from './dto/jogo.dto';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class JogoService {

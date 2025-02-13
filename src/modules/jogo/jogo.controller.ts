@@ -60,6 +60,7 @@ export class JogoController {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(JogoDto.data_lanc.toString())) {
       throw new Error('Data de lançamento inválida');
     }
+
     JogoDto.preco = parseFloat(JogoDto.preco as unknown as string);
     JogoDto.data_lanc = new Date(JogoDto.data_lanc);
     JogoDto.plataformaId = Number(JogoDto.plataformaId);

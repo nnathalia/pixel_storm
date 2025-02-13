@@ -2,11 +2,10 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { PrismaService } from 'src/database/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt/jwt.strategy';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaModule, PrismaService } from '../prisma/prisma.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 
 @Module({

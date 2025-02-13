@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Type } from 'class-transformer';
-import { IsString, IsNumber, IsOptional, IsInt, Min, IsUrl, IsDate } from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsInt, Min, IsUrl, IsDate} from 'class-validator';
 
 export class JogoDto {
   @IsString()
