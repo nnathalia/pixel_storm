@@ -11,7 +11,7 @@ export class JogoService {
     return this.prisma.desenvolvedor.findMany();
   }
 
-  async getGeneros() {
+  async getGeneros() {  
     return this.prisma.genero.findMany();
   }
 
