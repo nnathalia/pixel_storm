@@ -75,4 +75,12 @@ export class PedidoController {
   confirmationPage( @Req() req) {
     return { message: 'Compra realizada com sucesso!',  user: req.user};
   }
+
+
+  @Get()
+  @Render('pedido/index')
+  async listJogos(@Req() req) {
+    const pedidos = await this.pedidoService.listarPedidos();
+    return { pedido: pedidos, title: 'Lista de pedidos', user: req.user };
+  }
 }
