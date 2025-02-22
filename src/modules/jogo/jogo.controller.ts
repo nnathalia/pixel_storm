@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, Res, Req} from '@nestjs/common';
 import { JogoService } from './jogo.service';
-import  { response, Response } from 'express'
+import  {Response } from 'express'
 import { JogoValidador } from './jogo.validador';
 import { JogoDto } from './dto/jogo.dto'; // DTO para validar e tipar os dados do jogo
 import { setFlashErrors, setOld } from 'src/common/helpers/flash-errors';
-import { request } from 'http';
+//import { request } from 'http';
 
 @Controller('jogo')
 export class JogoController {
@@ -121,4 +121,3 @@ export class JogoController {
   }
  
 }
-  

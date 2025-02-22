@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { plainToInstance } from "class-transformer";
 import { BaseValidator } from "src/common/validator/base.validator";
 import { IValidator } from "src/common/validator/interface.validator";
