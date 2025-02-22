@@ -1,7 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, Res} from '@nestjs/common';
+import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, Res, Req} from '@nestjs/common';
 import { JogoService } from './jogo.service';
+import  { response, Response } from 'express'
+import { JogoValidador } from './jogo.validador';
 import { JogoDto } from './dto/jogo.dto'; // DTO para validar e tipar os dados do jogo
+import { setFlashErrors, setOld } from 'src/common/helpers/flash-errors';
+import { request } from 'http';
 
 @Controller('jogo')
 export class JogoController {
@@ -56,7 +60,7 @@ export class JogoController {
   // Cadastro de jogo
   @Post('')
   @Redirect('/jogo', 302)
-  async createJogo(@Body() JogoDto: JogoDto) {
+  async createJogo(@Body() jogo, @Res() response: Response, @Req() request, JogoDto: JogoDto ) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(JogoDto.data_lanc.toString())) {
       throw new Error('Data de lançamento inválida');
     }
@@ -67,8 +71,23 @@ export class JogoController {
     JogoDto.desenvolvedorId = Number(JogoDto.desenvolvedorId);
     JogoDto.generoId = Number(JogoDto.generoId);
 
-    const novoJogo = await this.jogoService.create(JogoDto);
-    return { message: 'Jogo cadastrado com sucesso', jogo: novoJogo };
+    try{
+      const validador = await new JogoValidador().validate(jogo);
+
+      if(validador.isError) {
+        setFlashErrors(request, validador.getErrors);
+        setOld(request, jogo);
+
+        return response.redirect('/jogo')
+      }
+      
+      await this.jogoService.create(validador.getData);
+    }catch { }
+
+    return response.redirect('/jogo')
+
+    //const novoJogo = await this.jogoService.create(JogoDto);
+    //return { message: 'Jogo cadastrado com sucesso', jogo: novoJogo };
   }
 
   // Atualização de jogo

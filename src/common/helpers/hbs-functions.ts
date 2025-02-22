@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-import * as moment from 'moment';
-
 const helpers = {
   dateFormat: (date: string, format: string) => {
     const locale = moment(date);
@@ -11,7 +8,6 @@ const helpers = {
     return locale.format(format);
   },
   inc: (value: string) => parseInt(value) + 1,
-  eq: (value: any, comparer: any) => value == comparer,
 };
 
 export const hbsRegisterHelpers = (hbs: any) => {

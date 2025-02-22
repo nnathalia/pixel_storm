@@ -1,12 +1,15 @@
 /* eslint-disable prettier/prettier */
+import { PartialType } from '@nestjs/mapped-types';
 import { Type } from 'class-transformer';
-import { IsString, IsNumber, IsOptional, IsInt, Min, IsUrl, IsDate} from 'class-validator';
+import { IsString, IsNumber, IsOptional, IsInt, Min, IsUrl, IsDate, IsNotEmpty} from 'class-validator';
 
 export class JogoDto {
   @IsString()
+  @IsNotEmpty({ message: 'O nome é obrigatório'})
   nome: string; 
 
   @IsString()
+  @IsNotEmpty({message: 'A descrição é obrigatória'})
   descricao: string; 
 
   @IsNumber()
@@ -30,3 +33,5 @@ export class JogoDto {
   @IsInt()
   generoId: number; 
 }
+
+export class JogoUpdateDto extends PartialType(JogoDto) { }
