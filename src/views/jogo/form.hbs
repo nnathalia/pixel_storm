@@ -1,6 +1,6 @@
-{{#> main}}
+{{#> admin}}
   {{#*inline "content"}}
-    <div class="pt-0 p-3 pb-0">
+    <div class="pt-5 p-3 pb-0">
       <div class="container">
         <div class="row">
           <div class="col">
@@ -19,7 +19,7 @@
           action="{{#if jogo}}/jogo/{{jogo.id}}?_method=PUT{{else}}/jogo{{/if}}" 
           method="POST">
           
-          <div class="row mb-4">
+          <div class=" mb-4">
             <div class="col">
               <div data-mdb-input-init class="form-outline">
                 <label class="form-label" for="imagem">Imagem</label>
@@ -31,6 +31,10 @@
                   value="{{#if jogo}}{{jogo.img_url}}{{/if}}" />
               </div>
             </div>
+            
+          </div>
+
+          <div class="mb-4">
             <div class="col">
               <div data-mdb-input-init class="form-outline">
                 <label class="form-label" for="titulo">Título</label>
@@ -43,9 +47,8 @@
               </div>
             </div>
           </div>
-
-          <div class="row mb-4">
-            <div class="col-8">
+          <div class="mb-4">
+              <div class="col">
               <div data-mdb-input-init class="mb-3">
                 <label for="descricao" class="form-label">Descrição</label>
                 <textarea 
@@ -55,7 +58,9 @@
                   rows="3">{{#if jogo}}{{jogo.descricao}}{{/if}}</textarea>
               </div>
             </div>
-            <div class="col">
+          </div>
+          <div class="row mb-4">
+            <div class="col-6">
               <div data-mdb-input-init class="form-outline">
                 <label class="form-label" for="preco">Preço</label>
                 <input 
@@ -67,52 +72,53 @@
                   value="{{#if jogo}}{{jogo.preco}}{{/if}}" />
               </div>
             </div>
-          </div>
 
-          <div class="row mb-4">
-            <div class="col">
+            <div class="col-6">
               <label class="form-label" for="lancamento">Lançamento</label>
               <input 
                 type="date" 
                 name="data_lanc" 
                 id="lancamento" 
                 class="form-control" 
-                value="{{#if jogo}}{{jogo.lanc}}{{/if}}" />
+                value="{{#if jogo}}{{dateFormat jogo.data_lanc 'YYYY-MM-DD'}}{{/if}}" />
             </div>
-            <div class="col">
+          </div>
+
+          <div class="row mb-4"> 
+            <div class="col-12 col-md-4 mb-4">
               <label class="form-label" for="desenvolvedor">Desenvolvedor</label>
               <select name="desenvolvedorId" id="desenvolvedor" class="form-select">
                 <option disabled {{#unless jogo}}selected{{/unless}}>Escolha o desenvolvedor</option>
                 {{#each desenvolvedores}}
                   <option 
                     value="{{this.id}}" 
-                    {{#if jogo}}{{#if (eq this.id ../jogo.desenvolvedorId)}}selected{{/if}}{{/if}}>
+                    {{#if ../jogo}}{{#if (eq this.id ../jogo.desenvolvedorId)}}selected{{/if}}{{/if}}>
                     {{this.nome}}
                   </option>
                 {{/each}}
               </select>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-4 mb-4">
               <label class="form-label" for="genero">Gênero</label>
               <select name="generoId" id="genero" class="form-select">
                 <option disabled {{#unless jogo}}selected{{/unless}}>Escolha o gênero</option>
                 {{#each generos}}
                   <option 
                     value="{{this.id}}" 
-                    {{#if jogo}}{{#if (eq this.id ../jogo.generoId)}}selected{{/if}}{{/if}}>
+                    {{#if ../jogo}}{{#if (eq this.id ../jogo.generoId)}}selected{{/if}}{{/if}}>
                     {{this.nome}}
                   </option>
                 {{/each}}
               </select>
             </div>
-            <div class="col">
+            <div class="col-12 col-md-4 mb-4">
               <label class="form-label" for="plataforma">Plataforma</label>
               <select name="plataformaId" id="plataforma" class="form-select">
                 <option disabled {{#unless jogo}}selected{{/unless}}>Escolha a plataforma</option>
                 {{#each plataformas}}
                   <option 
                     value="{{this.id}}" 
-                    {{#if jogo}}{{#if (eq this.id ../jogo.plataformaId)}}selected{{/if}}{{/if}}>
+                    {{#if ../jogo}}{{#if (eq this.id ../jogo.plataformaId)}}selected{{/if}}{{/if}}>
                     {{this.nome}}
                   </option>
                 {{/each}}
@@ -131,4 +137,4 @@
       </div> 
     </div>
   {{/inline}}
-{{/main}}
+{{/admin}}

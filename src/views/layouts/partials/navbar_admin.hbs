@@ -1,0 +1,39 @@
+<!-- Navigation -->
+<div class='container px-4 px-lg-5'>
+  <img src="/img/Logo_Pixel_Storm-removebg.png" alt="" style="width: 50px;">
+  <a class='navbar-brand' href='/jogo'>Pixel Storm</a>
+  <button
+    class='navbar-toggler'
+    type='button'
+    data-bs-toggle='collapse'
+    data-bs-target='#navbarSupportedContent'
+    aria-controls='navbarSupportedContent'
+    aria-expanded='false'
+    aria-label='Toggle navigation'
+  ><span class='navbar-toggler-icon'></span></button>
+
+  <div class='collapse navbar-collapse' id='navbarSupportedContent'>
+    <ul class='navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4'>
+      <li class='nav-item'><a class='nav-link' href='/jogo'>
+      <i class="bi bi-list"></i> Jogos</a></li>
+      <li class='nav-item'><a class='nav-link' href='/jogo/form'>
+      <i class="bi bi-pencil-square"></i> Cadastro de jogos</a></li>
+      <li class='nav-item'><a class='nav-link' href='/pedido'>
+      <i class="bi bi-box-seam"></i> Pedidos</a></li>
+    </ul>
+
+    <!-- Exibir usuário logado e botão de logout -->
+    {{#if user}}
+  <div class="d-flex align-items-center">
+    <span class="me-3 text-black">Olá, {{user.nome}}</span>
+    <form action="/auth/logout" method="POST">
+      <button type="submit" class="btn btn-danger">Logout</button>
+    </form>
+  </div>
+{{else}}
+  <a href="/login" class="btn btn-primary">Login</a>
+{{/if}}
+
+
+  </div>
+</div>

@@ -70,4 +70,16 @@ export class PedidoService {
 
     return pedido;
   }
+
+  async getUsers() {
+    return this.prisma.user.findMany();
+  }
+
+  async listarPedidos() {
+    return this.prisma.pedido.findMany({
+      include: {
+        usuario: true,
+      },
+    });
+  }
 }
