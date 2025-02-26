@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Request } from 'express';
 
 export const flashErrors = (req, res, next) => {

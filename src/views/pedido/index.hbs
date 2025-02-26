@@ -1,0 +1,44 @@
+{{#> admin}}
+  {{#*inline "content"}}
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between">
+        <h2 class="mb-4">Lista de pedidos</h2>
+      </div>
+     
+      {{#unless pedido}}
+        <h3>Nenhum pedido encontrado</h3>
+      {{/unless}}
+
+      {{#if pedido}}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Usuário</th>
+              <th scope="col">Data</th>
+              <th scope="col">status</th>
+              <th scope="col">Valor</th>             
+            </tr>
+          </thead>
+          <tbody>
+            {{#each pedido}}
+            <tr data-id="{{this.id}}">
+              <td>{{this.id}}</td>
+              <td>{{this.usuario.nome}}</td>
+              <td>{{dateFormat this.dataPedido 'DD-MM-YYYY' }}</td>
+              <td class="
+                {{#if (eq this.status 'Pendente')}} text-warning
+                {{else if (eq this.status 'Confirmado')}} text-success
+                {{else if (eq this.status 'Cancelado')}} text-danger
+                {{/if}}">
+                {{this.status}}
+              </td>
+              <td>R$ {{this.total}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    </div>
+  {{/inline}}
+{{/admin}}

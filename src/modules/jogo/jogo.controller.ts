@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, Res} from '@nestjs/common';
+import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, BadRequestException} from '@nestjs/common';
 import { JogoService } from './jogo.service';
 import { JogoDto } from './dto/jogo.dto'; // DTO para validar e tipar os dados do jogo
 
@@ -92,14 +92,16 @@ export class JogoController {
   // Método para deletar um jogo
   @Delete(':id')
   @HttpCode(200)
-  async deleteJogo(@Param('id') id: string, @Res() res: any) {
+  async deleteJogo(@Param('id') id: string) {
     try {
       await this.jogoService.delete(Number(id));
-      return res.status(200).send({ message: 'Jogo deletado com sucesso!' });
+      return { message: 'Jogo deletado com sucesso!' };
     } catch (error) {
-      return res.status(400).send({ message: 'Erro ao deletar o jogo.', error: error.message });
+      console.error('Erro ao deletar o jogo:', error);
+      throw new BadRequestException('Erro ao deletar o jogo.');
     }
   }
+
  
 }
   
