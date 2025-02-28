@@ -13,6 +13,21 @@
       </div>
       </div>
      
+     {{#if error}}
+  <div style="color: red;">
+    <p>{{error}}</p>
+  </div>
+{{/if}}
+
+{{#if jogos}}
+  <ul>
+    {{#each jogos}}
+      <li>{{nome}} - {{preco}} ({{dev}})</li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>Nenhum jogo encontrado.</p>
+{{/if}}
 
       {{#unless jogos}}
         <h3>Nenhum jogo encontrado</h3>

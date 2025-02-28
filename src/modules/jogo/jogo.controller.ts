@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, BadRequestException} from '@nestjs/common';
+import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, BadRequestException, Res} from '@nestjs/common';
 import { JogoService } from './jogo.service';
 import { JogoDto } from './dto/jogo.dto'; // DTO para validar e tipar os dados do jogo
+import { Response} from 'express';
+//import { title } from 'process';
+//import { STATUS_CODES } from 'http';
 
 @Controller('jogo')
 export class JogoController {
@@ -11,34 +14,68 @@ export class JogoController {
   @Get('form')
   @Render('jogo/form')
   async showForm() {
-    const desenvolvedores = await this.jogoService.getDesenvolvedores();
+    try{
+      const desenvolvedores = await this.jogoService.getDesenvolvedores();
     const generos = await this.jogoService.getGeneros();
     const plataformas = await this.jogoService.getPlataformas();
 
     return { desenvolvedores, generos, plataformas, title: 'Cadastrar jogo'  };
+    } catch (error){
+      return { error: 'Erro ao carregar o formulário. Tente novamente', title: 'Cadastrar jogo'}
+    }
   }
 
   // Formulário de edição de jogo
   @Get('form/:id')
   @Render('jogo/form') // Nome da view Handlebars
-  async form(@Param('id') id: string) {
-    const jogo = await this.jogoService.findById(Number(id));
-    const desenvolvedores = await this.jogoService.getDesenvolvedores();
-    const generos = await this.jogoService.getGeneros();
-    const plataformas = await this.jogoService.getPlataformas();
-
-    if (!jogo) {
-      return { error: 'Jogo não encontrado', desenvolvedores, generos, plataformas };
+  async form(@Param('id') id: string, @Res() res: Response) {
+    try {
+      const jogo = await this.jogoService.findById(Number(id));
+      const desenvolvedores = await this.jogoService.getDesenvolvedores();
+      const generos = await this.jogoService.getGeneros();
+      const plataformas = await this.jogoService.getPlataformas();
+  
+      if (!jogo) {
+        return res.render('jogo/form', {
+          error: 'Jogo não encontrado',
+          desenvolvedores,
+          generos,
+          plataformas,
+          title: 'Cadastrar Jogo',
+          isEdit: false,
+        });
+      }
+  
+      return {
+        jogo,
+        desenvolvedores,
+        generos,
+        plataformas,
+        title: 'Editar Jogo',
+        isEdit: true,
+      };
+    } catch (error) {
+      const desenvolvedores = await this.jogoService.getDesenvolvedores();
+      const generos = await this.jogoService.getGeneros();
+      const plataformas = await this.jogoService.getPlataformas();
+  
+      return {
+        error: 'Erro ao carregar o jogo para edição. Tente novamente.',
+        desenvolvedores,
+        generos,
+        plataformas,
+        title: 'Editar Jogo',
+        isEdit: true,
+      };
     }
-
-    return { jogo, desenvolvedores, generos, plataformas, title: 'Editar jogo' }; // Envia os dados para a view
   }
 
   // Lista os jogos cadastrados
   @Get()
   @Render('jogo/index')
   async listJogos() {
-    const jogos = await this.jogoService.listarJogos();
+    try{
+      const jogos = await this.jogoService.listarJogos();
     const games = jogos.map((jogo) => ({
       id: jogo.id,
       img_url: jogo.img_url,
@@ -51,33 +88,156 @@ export class JogoController {
       lanc: jogo.data_lanc.toISOString().split('T')[0],
     }));
     return { jogos: games, title: 'Lista de jogos'  };
+    } catch (error) {
+      return {error: 'Erro ao listar os jogos. Tente novamente', title: 'Lista de jogos'};
+    }
   }
 
   // Cadastro de jogo
   @Post('')
-  @Redirect('/jogo', 302)
-  async createJogo(@Body() JogoDto: JogoDto) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(JogoDto.data_lanc.toString())) {
-      throw new Error('Data de lançamento inválida');
+  async createJogo(@Body() jogoDto: JogoDto, @Res() res: Response) {
+    try {
+      const errors = [];
+  
+      // Validação de nome
+      if (!jogoDto.nome || typeof jogoDto.nome !== 'string' || jogoDto.nome.trim() === '') {
+        errors.push('O título do jogo é obrigatório.');
+      }
+  
+      // Validação de preço
+      if (!jogoDto.preco || isNaN(jogoDto.preco) || jogoDto.preco <= 0) {
+        errors.push('O preço deve ser um número positivo.');
+      }
+  
+      // Validação de data_lanc
+      if (!jogoDto.data_lanc || !/^\d{4}-\d{2}-\d{2}$/.test(jogoDto.data_lanc.toString())) {
+        errors.push('A data de lançamento deve ser informada.');
+      } else {
+        const date = new Date(jogoDto.data_lanc);
+        if (isNaN(date.getTime())) {
+          errors.push('Data de lançamento inválida.');
+        } else {
+          jogoDto.data_lanc = date;
+        }
+      }
+  
+      // Validação de plataformaId
+      if (!jogoDto.plataformaId || isNaN(jogoDto.plataformaId) || jogoDto.plataformaId <= 0) {
+        errors.push('A plataforma é obrigatória.');
+      }
+  
+      // Validação de desenvolvedorId
+      if (!jogoDto.desenvolvedorId || isNaN(jogoDto.desenvolvedorId) || jogoDto.desenvolvedorId <= 0) {
+        errors.push('O desenvolvedor é obrigatório.');
+      }
+  
+      // Validação de generoId
+      if (!jogoDto.generoId || isNaN(jogoDto.generoId) || jogoDto.generoId <= 0) {
+        errors.push('O gênero é obrigatório.');
+      }
+  
+      if (errors.length > 0) {
+        const desenvolvedores = await this.jogoService.getDesenvolvedores();
+        const generos = await this.jogoService.getGeneros();
+        const plataformas = await this.jogoService.getPlataformas();
+  
+        return res.render('jogo/form', {
+          formData: jogoDto,
+          desenvolvedores,
+          generos,
+          plataformas,
+          errors: errors,
+          title: 'Cadastrar Jogo',
+          isEdit: false,
+        });
+      }
+  
+      // Converte os campos para os tipos corretos
+      jogoDto.preco = parseFloat(jogoDto.preco as unknown as string);
+      jogoDto.plataformaId = Number(jogoDto.plataformaId);
+      jogoDto.desenvolvedorId = Number(jogoDto.desenvolvedorId);
+      jogoDto.generoId = Number(jogoDto.generoId);
+  
+      await this.jogoService.create(jogoDto);
+      return res.redirect('/jogo');
+    } catch (error) {
+      console.error('Erro ao cadastrar o jogo:', error.message);
+      const desenvolvedores = await this.jogoService.getDesenvolvedores();
+      const generos = await this.jogoService.getGeneros();
+      const plataformas = await this.jogoService.getPlataformas();
+  
+      return res.render('jogo/form', {
+        formData: jogoDto,
+        desenvolvedores,
+        generos,
+        plataformas,
+        errors: [error.message || 'Erro inesperado ao cadastrar o jogo. Tente novamente.'],
+        title: 'Cadastrar Jogo',
+        isEdit: false,
+      });
     }
-
-    JogoDto.preco = parseFloat(JogoDto.preco as unknown as string);
-    JogoDto.data_lanc = new Date(JogoDto.data_lanc);
-    JogoDto.plataformaId = Number(JogoDto.plataformaId);
-    JogoDto.desenvolvedorId = Number(JogoDto.desenvolvedorId);
-    JogoDto.generoId = Number(JogoDto.generoId);
-
-    const novoJogo = await this.jogoService.create(JogoDto);
-    return { message: 'Jogo cadastrado com sucesso', jogo: novoJogo };
   }
 
   // Atualização de jogo
   @Put(':id')
-  @Redirect('/jogo', 302)
-  async updateJogo(@Param('id') id: string, @Body() jogoDto: JogoDto) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(jogoDto.data_lanc.toString())) {
-      throw new Error('Data de lançamento inválida');
+async updateJogo(@Param('id') id: string, @Body() jogoDto: JogoDto, @Res() res: Response) {
+  try {
+    const errors = [];
+
+    if (!jogoDto.nome || typeof jogoDto.nome !== 'string' || jogoDto.nome.trim() === '') {
+      errors.push('O título do jogo é obrigatório.');
     }
+
+    // Validação de preço
+    if (!jogoDto.preco || isNaN(jogoDto.preco) || jogoDto.preco <= 0) {
+      errors.push('O preço deve ser um número positivo.');
+    }
+
+    // Validação de data_lanc
+    if (!jogoDto.data_lanc || !/^\d{4}-\d{2}-\d{2}$/.test(jogoDto.data_lanc.toString())) {
+      errors.push('A data de lançamento deve ser válida');
+    } else {
+      const date = new Date(jogoDto.data_lanc);
+      if (isNaN(date.getTime())) {
+        errors.push('Data de lançamento inválida.');
+      } else {
+        jogoDto.data_lanc = date;
+      }
+    }
+
+    // Validação de plataformaId
+    if (!jogoDto.plataformaId || isNaN(jogoDto.plataformaId) || jogoDto.plataformaId <= 0) {
+      errors.push('A plataforma é obrigatória.');
+    }
+
+    // Validação de desenvolvedorId
+    if (!jogoDto.desenvolvedorId || isNaN(jogoDto.desenvolvedorId) || jogoDto.desenvolvedorId <= 0) {
+      errors.push('O desenvolvedor é obrigatório.');
+    }
+
+    // Validação de generoId
+    if (!jogoDto.generoId || isNaN(jogoDto.generoId) || jogoDto.generoId <= 0) {
+      errors.push('O gênero é obrigatório.');
+    }
+
+    if (errors.length > 0) {
+      const jogo = await this.jogoService.findById(Number(id));
+      const desenvolvedores = await this.jogoService.getDesenvolvedores();
+      const generos = await this.jogoService.getGeneros();
+      const plataformas = await this.jogoService.getPlataformas();
+
+      return res.render('jogo/form', {
+        jogo: { ...jogo, ...jogoDto }, // Mantém os dados originais combinados com os enviados
+        desenvolvedores,
+        generos,
+        plataformas,
+        errors: errors, // Passa a lista de erros
+        title: 'Editar Jogo',
+        isEdit: true,
+      });
+    }
+
+    // Converte os campos para os tipos corretos
     jogoDto.preco = parseFloat(jogoDto.preco as unknown as string);
     jogoDto.data_lanc = new Date(jogoDto.data_lanc);
     jogoDto.plataformaId = Number(jogoDto.plataformaId);
@@ -85,8 +245,25 @@ export class JogoController {
     jogoDto.generoId = Number(jogoDto.generoId);
 
     await this.jogoService.update(Number(id), jogoDto);
-    return { message: 'Jogo atualizado com sucesso' };
+    return res.redirect('/jogo');
+  } catch (error) {
+    console.error('Erro ao atualizar o jogo:', error.message);
+    const jogo = await this.jogoService.findById(Number(id));
+    const desenvolvedores = await this.jogoService.getDesenvolvedores();
+    const generos = await this.jogoService.getGeneros();
+    const plataformas = await this.jogoService.getPlataformas();
+
+    return res.render('jogo/form', {
+      jogo: { ...jogo, ...jogoDto },
+      desenvolvedores,
+      generos,
+      plataformas,
+      error: error.message || 'Erro ao atualizar o jogo. Verifique os dados e tente novamente!',
+      title: 'Editar Jogo',
+      isEdit: true, //Deixa claro que é uma edição
+    });
   }
+}
 
 
   // Método para deletar um jogo

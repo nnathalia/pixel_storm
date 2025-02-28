@@ -4,8 +4,22 @@
       <div class="container">
         <div class="row">
           <div class="col">
-            <h2 class="m-3">{{#if jogo}}Editar Jogo{{else}}Cadastrar um novo Jogo{{/if}}</h2>
+            <h2 class="m-3">{{#if isEdit}}Editar Jogo{{else}}Cadastrar um novo Jogo{{/if}}</h2>
           </div>
+          
+          <!-- Lista os erros, caso encontre algum.-->
+         {{#if errors}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Erros encontrados:</strong>
+              <ul>
+                {{#each errors}}
+                  <li>{{this}}</li>
+                {{/each}}
+              </ul>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {{/if}}
+
           <div class="col">
             <div class="d-flex justify-content-end align-items-center pt-3">
               <a href='/jogo'>
@@ -16,10 +30,10 @@
         </div>
         <form 
           id="jogoForm" 
-          action="{{#if jogo}}/jogo/{{jogo.id}}?_method=PUT{{else}}/jogo{{/if}}" 
+          action="{{#if isEdit}}/jogo/{{jogo.id}}?_method=PUT{{else}}/jogo{{/if}}" 
           method="POST">
           
-          <div class=" mb-4">
+          <div class="mb-4">
             <div class="col">
               <div data-mdb-input-init class="form-outline">
                 <label class="form-label" for="imagem">Imagem</label>
@@ -28,7 +42,7 @@
                   name="img_url" 
                   id="imagem" 
                   class="form-control" 
-                  value="{{#if jogo}}{{jogo.img_url}}{{/if}}" />
+                  value="{{#if isEdit}}{{jogo.img_url}}{{else}}{{formData.img_url}}{{/if}}" />
               </div>
             </div>
             
@@ -43,22 +57,24 @@
                   name="nome" 
                   id="titulo" 
                   class="form-control" 
-                  value="{{#if jogo}}{{jogo.nome}}{{/if}}" />
+                  value="{{#if isEdit}}{{jogo.nome}}{{else}}{{formData.nome}}{{/if}}" />
               </div>
             </div>
           </div>
+
           <div class="mb-4">
-              <div class="col">
+            <div class="col">
               <div data-mdb-input-init class="mb-3">
                 <label for="descricao" class="form-label">Descrição</label>
                 <textarea 
                   class="form-control" 
                   name="descricao" 
                   id="descricao" 
-                  rows="3">{{#if jogo}}{{jogo.descricao}}{{/if}}</textarea>
+                  rows="3">{{#if isEdit}}{{jogo.descricao}}{{else}}{{formData.descricao}}{{/if}}</textarea>
               </div>
             </div>
           </div>
+
           <div class="row mb-4">
             <div class="col-6">
               <div data-mdb-input-init class="form-outline">
@@ -69,7 +85,7 @@
                   name="preco" 
                   id="preco" 
                   class="form-control" 
-                  value="{{#if jogo}}{{jogo.preco}}{{/if}}" />
+                  value="{{#if isEdit}}{{jogo.preco}}{{else}}{{formData.preco}}{{/if}}" />
               </div>
             </div>
 
@@ -80,7 +96,7 @@
                 name="data_lanc" 
                 id="lancamento" 
                 class="form-control" 
-                value="{{#if jogo}}{{dateFormat jogo.data_lanc 'YYYY-MM-DD'}}{{/if}}" />
+                value="{{#if isEdit}}{{dateFormat jogo.data_lanc 'YYYY-MM-DD'}}{{else}}{{formData.data_lanc}}{{/if}}" />
             </div>
           </div>
 
@@ -88,11 +104,11 @@
             <div class="col-12 col-md-4 mb-4">
               <label class="form-label" for="desenvolvedor">Desenvolvedor</label>
               <select name="desenvolvedorId" id="desenvolvedor" class="form-select">
-                <option disabled {{#unless jogo}}selected{{/unless}}>Escolha o desenvolvedor</option>
+                <option disabled {{#unless isEdit}}selected{{/unless}}>Escolha o desenvolvedor</option>
                 {{#each desenvolvedores}}
                   <option 
                     value="{{this.id}}" 
-                    {{#if ../jogo}}{{#if (eq this.id ../jogo.desenvolvedorId)}}selected{{/if}}{{/if}}>
+                    {{#if ../isEdit}}{{#if (eq this.id ../jogo.desenvolvedorId)}}selected{{/if}}{{else}}{{#if (eq this.id ../formData.desenvolvedorId)}}selected{{/if}}{{/if}}>
                     {{this.nome}}
                   </option>
                 {{/each}}
@@ -101,11 +117,11 @@
             <div class="col-12 col-md-4 mb-4">
               <label class="form-label" for="genero">Gênero</label>
               <select name="generoId" id="genero" class="form-select">
-                <option disabled {{#unless jogo}}selected{{/unless}}>Escolha o gênero</option>
+                <option disabled {{#unless isEdit}}selected{{/unless}}>Escolha o gênero</option>
                 {{#each generos}}
                   <option 
                     value="{{this.id}}" 
-                    {{#if ../jogo}}{{#if (eq this.id ../jogo.generoId)}}selected{{/if}}{{/if}}>
+                    {{#if ../isEdit}}{{#if (eq this.id ../jogo.generoId)}}selected{{/if}}{{else}}{{#if (eq this.id ../formData.generoId)}}selected{{/if}}{{/if}}>
                     {{this.nome}}
                   </option>
                 {{/each}}
@@ -114,22 +130,22 @@
             <div class="col-12 col-md-4 mb-4">
               <label class="form-label" for="plataforma">Plataforma</label>
               <select name="plataformaId" id="plataforma" class="form-select">
-                <option disabled {{#unless jogo}}selected{{/unless}}>Escolha a plataforma</option>
+                <option disabled {{#unless isEdit}}selected{{/unless}}>Escolha a plataforma</option>
                 {{#each plataformas}}
                   <option 
                     value="{{this.id}}" 
-                    {{#if ../jogo}}{{#if (eq this.id ../jogo.plataformaId)}}selected{{/if}}{{/if}}>
+                    {{#if ../isEdit}}{{#if (eq this.id ../jogo.plataformaId)}}selected{{/if}}{{else}}{{#if (eq this.id ../formData.plataformaId)}}selected{{/if}}{{/if}}>
                     {{this.nome}}
                   </option>
                 {{/each}}
               </select>
             </div>
           </div>
-
+        
           <!-- Submit button -->
           <div class="container-fluid d-flex justify-content-end">
             <button type="submit" class="btn btn-primary btn-block mb-4 text-white">
-              {{#if jogo}}Salvar Alterações{{else}}Cadastrar{{/if}}
+              {{#if isEdit}}Salvar Alterações{{else}}Cadastrar{{/if}}
             </button>
           </div>
         </form>
