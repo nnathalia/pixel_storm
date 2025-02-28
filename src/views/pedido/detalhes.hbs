@@ -1,0 +1,60 @@
+{{#> admin}}
+  {{#*inline "content"}}
+    <div class="container mt-5">
+      <div class="p-4 border-0">
+        <h2 class="mb-4 text-primary">Detalhes do Pedido #{{pedido.id}}</h2>
+
+        <div class=" p-3 mb-3 bg-light border-0">
+          <h4 class="text-secondary">Informações do Pedido</h4>
+          <p><strong>Data do Pedido:</strong> {{ dateFormat pedido.dataPedido 'DD-MM-YYYY' }}</p>
+          <p><strong>Status:</strong> 
+            <span class="badge 
+              {{#if (eq pedido.status 'Confirmado')}}bg-success{{/if}}
+              {{#if (eq pedido.status 'Pendente')}}bg-warning text-dark{{/if}}
+              {{#if (eq pedido.status 'Cancelado')}}bg-danger{{/if}}">
+              {{pedido.status}}
+            </span>
+          </p>
+          <p><strong>Total:</strong> <span class="text-success fw-bold">R$ {{pedido.total}}</span></p>
+        </div>
+
+        <div class="card p-3 mb-3 border-0">
+          <h4 class="text-secondary">Usuário</h4>
+          <p><strong>Nome:</strong> {{pedido.usuario.nome}}</p>
+          <p><strong>Email:</strong> {{pedido.usuario.email}}</p>
+        </div>
+
+        <div class="card p-3 mb-3 border-0">
+          <h4 class="text-secondary">Itens do Pedido</h4>
+          <ul class="list-group">
+            {{#each pedido.itens}}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{this.jogo.nome}}</span>
+                <strong class="text-primary">R$ {{this.jogo.preco}}</strong>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+
+        <div class="card p-3 border-0">
+          <h4 class="text-secondary">Pagamentos</h4>
+          {{#each pedido.pagamentos}}
+            <div class="border-bottom pb-2 mb-2">
+              <p><strong>Método de Pagamento:</strong> {{this.metodo}}</p>
+              <p><strong>Valor Pago:</strong> <span class="text-success fw-bold">R$ {{this.valor}}</span></p>
+              <p><strong>Data do Pagamento:</strong> {{dateFormat this.dataPedido 'DD-MM-YYYY' }}</p>
+              <p><strong>Status:</strong> 
+            <span class="badge 
+              {{#if (eq this.status 'Confirmado')}}bg-success{{/if}}
+              {{#if (eq this.status 'Pendente')}}bg-warning text-dark{{/if}}
+              {{#if (eq this.status 'Cancelado')}}bg-danger{{/if}}">
+              {{this.status}}
+            </span>
+          </p>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  {{/inline}}
+{{/admin}}

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Render, Body, Redirect, Put, Param, Delete, HttpCode, BadRequestException, Res} from '@nestjs/common';
+import { Controller, Get, Post, Render, Body, Put, Param, Delete, HttpCode, BadRequestException, Res} from '@nestjs/common';
 import { JogoService } from './jogo.service';
 import { JogoDto } from './dto/jogo.dto'; // DTO para validar e tipar os dados do jogo
 import { Response} from 'express';

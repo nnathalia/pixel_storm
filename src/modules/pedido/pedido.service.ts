@@ -1,10 +1,31 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { ItemPedido, Jogo, Pagamento, Pedido, Usuario } from '@prisma/client';
 
 @Injectable()
 export class PedidoService {
+
   constructor(private readonly prisma: PrismaService) {}
+
+  async findById(id: number): Promise<(Pedido & { 
+    usuario: Usuario; 
+    itens: (ItemPedido & { jogo: Jogo })[]; 
+    pagamentos: Pagamento[]; 
+  }) | null> {
+    return this.prisma.pedido.findUnique({
+      where: { id },
+      include: {
+        usuario: true,  // Garante que os dados do usuário sejam retornados
+        itens: {
+          include: {
+            jogo: true  // Garante que os jogos dentro dos itens sejam retornados
+          }
+        },
+        pagamentos: true  // Inclui os pagamentos relacionados
+      }
+    });
+  }
 
   async criarPedido(data: any) {
     try {
@@ -73,6 +94,14 @@ export class PedidoService {
 
   async getUsers() {
     return this.prisma.user.findMany();
+  }
+
+  async getPagamentos() {
+    return this.prisma.pagamento.findMany();
+  }
+
+  async getItens() {
+    return this.prisma.pagamento.findMany();
   }
 
   async listarPedidos() {

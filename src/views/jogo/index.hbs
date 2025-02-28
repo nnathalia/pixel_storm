@@ -18,25 +18,14 @@
     <p>{{error}}</p>
   </div>
 {{/if}}
-
-{{#if jogos}}
-  <ul>
-    {{#each jogos}}
-      <li>{{nome}} - {{preco}} ({{dev}})</li>
-    {{/each}}
-  </ul>
-{{else}}
-  <p>Nenhum jogo encontrado.</p>
-{{/if}}
-
       {{#unless jogos}}
         <h3>Nenhum jogo encontrado</h3>
       {{/unless}}
 
       {{#if jogos}}
   <div class="table-responsive" style="max-height: 100vh; overflow-y: auto;">
-    <table class="table table-striped">
-      <thead>
+    <table class="table table-hover">
+      <thead class="bg-white text-dark">
         <tr>
           <th scope="col">Imagem</th>
           <th scope="col">Título</th>
