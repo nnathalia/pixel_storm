@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Render, Body, Put, Param, Delete, HttpCode, BadRequestException, Res} from '@nestjs/common';
+import { Controller, Get, Post, Render, Body, Put, Param, Delete, HttpCode, BadRequestException, Res, Req} from '@nestjs/common';
 import { JogoService } from './jogo.service';
 import { JogoDto } from './dto/jogo.dto'; // DTO para validar e tipar os dados do jogo
 import { Response} from 'express';
@@ -13,15 +13,15 @@ export class JogoController {
   // Formulário de criação de jogo
   @Get('form')
   @Render('jogo/form')
-  async showForm() {
+  async showForm(@Req() req) {
     try{
       const desenvolvedores = await this.jogoService.getDesenvolvedores();
     const generos = await this.jogoService.getGeneros();
     const plataformas = await this.jogoService.getPlataformas();
 
-    return { desenvolvedores, generos, plataformas, title: 'Cadastrar jogo'  };
+    return { desenvolvedores, generos, plataformas, title: 'Cadastrar jogo', user: req.user  };
     } catch (error){
-      return { error: 'Erro ao carregar o formulário. Tente novamente', title: 'Cadastrar jogo'}
+      return { error: 'Erro ao carregar o formulário. Tente novamente', title: 'Cadastrar jogo', user: req.user }
     }
   }
 
@@ -73,7 +73,7 @@ export class JogoController {
   // Lista os jogos cadastrados
   @Get()
   @Render('jogo/index')
-  async listJogos() {
+  async listJogos(@Req() req) {
     try{
       const jogos = await this.jogoService.listarJogos();
     const games = jogos.map((jogo) => ({
@@ -87,15 +87,16 @@ export class JogoController {
       plataforma: jogo.plataforma.nome,
       lanc: jogo.data_lanc.toISOString().split('T')[0],
     }));
-    return { jogos: games, title: 'Lista de jogos'  };
+    return { jogos: games, title: 'Lista de jogos',user: req.user   };
     } catch (error) {
-      return {error: 'Erro ao listar os jogos. Tente novamente', title: 'Lista de jogos'};
+      return {error: 'Erro ao listar os jogos. Tente novamente', title: 'Lista de jogos', user: req.user };
     }
   }
 
   // Cadastro de jogo
   @Post('')
-  async createJogo(@Body() jogoDto: JogoDto, @Res() res: Response) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async createJogo(@Body() jogoDto: JogoDto, @Res() res: Response, @Req() req) {
     try {
       const errors = [];
   
