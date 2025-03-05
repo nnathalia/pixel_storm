@@ -28,7 +28,7 @@ export class JogoController {
   // Formulário de edição de jogo
   @Get('form/:id')
   @Render('jogo/form') // Nome da view Handlebars
-  async form(@Param('id') id: string, @Res() res: Response) {
+  async form(@Param('id') id: string, @Res() res: Response, @Req() req) {
     try {
       const jogo = await this.jogoService.findById(Number(id));
       const desenvolvedores = await this.jogoService.getDesenvolvedores();
@@ -43,6 +43,7 @@ export class JogoController {
           plataformas,
           title: 'Cadastrar Jogo',
           isEdit: false,
+          user: req.user
         });
       }
   
@@ -53,6 +54,7 @@ export class JogoController {
         plataformas,
         title: 'Editar Jogo',
         isEdit: true,
+        user: req.user
       };
     } catch (error) {
       const desenvolvedores = await this.jogoService.getDesenvolvedores();
